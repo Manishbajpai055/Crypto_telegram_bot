@@ -12,7 +12,7 @@ logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s
 
 logger = logging.getLogger(__name__)
 
-print(logger)
+#print(logger)
 
 # Define a few command handlers. These usually take the two arguments update and
 # context. Error handlers also receive the raised TelegramError object in error.
@@ -27,23 +27,18 @@ def news(update, context):
 
 def price(update, context):
     """Send a message when the command /PRICE is issued."""
-    cc = ForeignExchange(key=API_KEYS.URL_API_KEY , output_format="json")
-    BTC, _ = cc.get_currency_exchange_rate(from_currency='BTC',to_currency='INR')
-    ADA, _ = cc.get_currency_exchange_rate(from_currency='ADA',to_currency='INR')
-    chainLINK, _ = cc.get_currency_exchange_rate(from_currency='LINK',to_currency='INR')
-    Metal, _ = cc.get_currency_exchange_rate(from_currency='MTL',to_currency='INR')
-    Data = str( str(
-    BTC["1. From_Currency Code"]) + " INR : " + str( BTC["5. Exchange Rate"])
-    + '\n' +
-    str(ADA["1. From_Currency Code"]) + " INR: " + str( ADA["5. Exchange Rate"]) 
-    + '\n' +
-    str(chainLINK["1. From_Currency Code"]) + " INR: " + str( chainLINK["5. Exchange Rate"]) 
-    + '\n' +
-    str(Metal["1. From_Currency Code"]) + " INR: " + str(Metal["5. Exchange Rate"]) 
-    
-    )
-    print(Data)
-    update.message.reply_text(Data)
+    CUR_NAME = update.message.text
+    CUR_NAME = CUR_NAME.replace(" " , "")
+    CUR_NAME = CUR_NAME.split("/price")[1]
+    print(CUR_NAME)
+    if(len(CUR_NAME) > 5 ):
+        update.message.reply_text("are you fucking kiding me ?")
+    else:
+        cc = ForeignExchange(key=API_KEYS.URL_API_KEY , output_format="json")
+        Currency , _ = cc.get_currency_exchange_rate(from_currency=CUR_NAME,to_currency='INR')
+        Data = str( 
+        str(Currency["1. From_Currency Code"]) + " INR : " + str( Currency["5. Exchange Rate"]))
+        update.message.reply_text(Data)
 
 
 def help(update, context):
@@ -53,7 +48,7 @@ def help(update, context):
 
 def echo(update, context):
     """Echo the user message."""
-    update.message.reply_text(update.message.text)
+    update.message.reply_text(update.message.text + " kya bsdk?")
 
 
 def error(update, context):
